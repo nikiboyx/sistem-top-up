@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Daftar Produk{% endblock %}
+
+{% block content %}
+
+<!-- 🎯 Banner Promosi -->
+<div class="bg-yellow-400/10 border border-yellow-400/20 rounded-xl p-6 mb-10 shadow-md text-center">
+    <h1 class="text-2xl md:text-3xl font-bold text-yellow-400 mb-2">
+        🎉 Promo Spesial Bulan Ini!
+    </h1>
+    <p class="text-gray-300 text-sm md:text-base max-w-2xl mx-auto">
+        Dapatkan top-up cepat, aman, dan terpercaya untuk berbagai game favoritmu.
+        Gunakan kode <span class="font-bold text-yellow-300">TOPUPHEMAT</span> dan nikmati <strong>diskon hingga 20%</strong> di beberapa produk pilihan!
+    </p>
+</div>
+
+<h2 class="text-2xl font-semibold mb-6 text-yellow-400">Pilih Produk Yang Anda Sukai</h2>
+
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+    {# Loop untuk setiap produk dari database Anda #}
+    {% for produk in produk_list %}
+    <a href="{% url 'produk_detail' produk.pk %}" class="group block rounded-lg overflow-hidden border border-gray-700 hover:border-yellow-400/80 transition-all duration-300">
+        <div class="relative">
+            
+            {# Gambar Produk #}
+            {% if produk.gambar %}
+                <img src="{{ produk.gambar.url }}" alt="{{ produk.nama }}" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300">
+            {% else %}
+                {# Gambar placeholder jika produk tidak memiliki gambar #}
+                <img src="https://via.placeholder.com/200x280.png?text={{ produk.nama|urlencode }}" alt="{{ produk.nama }}" class="w-full h-56 object-cover transform group-hover:scale-105 transition-transform duration-300">
+            {% endif %}
+
+            {# (PERUBAHAN DI SINI) Overlay untuk Teks di Atas Gambar #}
+            <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
+                
+                {# Nama Produk #}
+                <h3 class="text-white text-base font-semibold truncate">{{ produk.nama }}</h3>
+                
+                {# Harga Produk #}
+                <p class="text-lg font-bold text-yellow-400">Rp{{ produk.harga }}</p>
+
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% if not produk_list %}
+    <div class="text-center text-gray-400 mt-8">
+        <i class="fas fa-box-open text-4xl mb-2 text-yellow-400"></i>
+        <p class="text-lg">Tidak ada produk ditemukan{% if query %} untuk "<strong>{{ query }}</strong>"{% endif %}.</p>
+    </div>
+{% endif %}
+
+{% endblock %}

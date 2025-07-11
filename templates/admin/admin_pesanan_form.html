@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Ubah Status Pesanan{% endblock %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <div class="bg-gray-800 rounded-xl shadow-lg p-8">
+        
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-yellow-400">
+                <i class="fas fa-edit fa-fw mr-2"></i>Ubah Status Pesanan
+            </h1>
+            <p class="text-sm text-gray-400 mt-1">
+                Kode Pesanan: <span class="font-mono text-yellow-400">{{ pesanan.kode_unik }}</span>
+            </p>
+        </div>
+
+        <div class="bg-gray-900/50 p-4 rounded-lg mb-6 space-y-2">
+            <div>
+                <span class="text-gray-400 font-semibold w-24 inline-block">Nama</span>
+                <span class="text-white">: {{ pesanan.nama_pemesan }}</span>
+            </div>
+            <div>
+                <span class="text-gray-400 font-semibold w-24 inline-block">Produk</span>
+                <span class="text-white">: {{ pesanan.produk.nama }}</span>
+            </div>
+            <div>
+                <span class="text-gray-400 font-semibold w-24 inline-block">Status Saat Ini</span>
+                <span class="text-white">: 
+                    {% if pesanan.status == 'SELESAI' %}
+                        <span class="bg-green-500/20 text-green-300 text-xs font-medium px-2.5 py-0.5 rounded-full">Selesai</span>
+                    {% elif pesanan.status == 'PENDING' %}
+                        <span class="bg-yellow-500/20 text-yellow-300 text-xs font-medium px-2.5 py-0.5 rounded-full">Pending</span>
+                    {% elif pesanan.status == 'BATAL' %}
+                         <span class="bg-red-500/20 text-red-400 text-xs font-medium px-2.5 py-0.5 rounded-full">Batal</span>
+                    {% else %}
+                         <span class="bg-gray-500/20 text-gray-300 text-xs font-medium px-2.5 py-0.5 rounded-full">{{ pesanan.get_status_display }}</span>
+                    {% endif %}
+                </span>
+            </div>
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Ubah Status Menjadi:</label>
+                {{ form.status }}
+            </div>
+
+            <div class="flex items-center justify-end space-x-4 pt-4">
+                <a href="{% url 'admin_panel' %}" class="bg-gray-600/50 text-gray-300 hover:bg-gray-600 px-6 py-2 rounded-lg transition-colors text-sm font-semibold">
+                    Kembali
+                </a>
+                <button type="submit" class="bg-yellow-400 text-black font-bold px-6 py-2 rounded-lg hover:bg-yellow-500 transition-colors">
+                    <i class="fas fa-save fa-fw mr-1"></i>Update Status
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{# CSS Tambahan untuk styling form Django #}
+<style>
+    /* Styling untuk select dropdown dari form Django */
+    select {
+        width: 100%;
+        background-color: #1F2937; /* bg-gray-800 */
+        border: 1px solid #4B5563; /* border-gray-600 */
+        color: white;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    select:focus {
+        outline: none;
+        border-color: #FBBF24; /* border-yellow-400 */
+        box-shadow: 0 0 0 2px #FBBF24;
+    }
+</style>
+
+{% endblock %}

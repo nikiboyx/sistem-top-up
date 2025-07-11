@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block title %}Detail Produk - {{ produk.nama }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+    <!-- KIRI: DETAIL PRODUK -->
+    <div class="lg:col-span-3">
+        <div class="bg-gray-800 p-6 rounded-lg sticky top-24">
+            {% if produk.gambar %}
+                <div class="aspect-[4/3] overflow-hidden rounded-lg mb-4">
+                <img src="{{ produk.gambar.url }}" alt="{{ produk.nama }}"
+                    class="w-full h-full object-cover cursor-pointer"
+                    onclick="openModal('{{ produk.gambar.url }}')">
+                </div>
+            {% endif %}
+            <h1 class="text-xl font-bold text-gray-100">{{ produk.nama }}</h1>
+            <p class="text-yellow-400 text-xl font-semibold mb-4">Rp{{ produk.harga }}</p>
+            <div class="prose prose-invert text-gray-300">
+                <h2 class="text-md font-bold text-gray-100">
+                    Deskripsi Produk
+                </h2>
+                {% if produk.deskripsi %}
+                    <p>{{ produk.deskripsi|linebreaks }}</p>
+                {% else %}
+                    <p>Top up {{ produk.nama }} dengan mudah, cepat, dan aman hanya di sini.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- KANAN: FORM PEMESANAN -->
+    <div class="lg:col-span-2">
+        <form method="post" class="bg-gray-800 p-6 rounded-lg space-y-8">
+            {% csrf_token %}
+
+            <!-- STEP 1: DATA PEMESAN -->
+            <div class="step space-y-4">
+                <h2 class="text-xl font-semibold text-yellow-400 border-l-4 border-yellow-400 pl-3">
+                    1. Data Pemesan
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_nama_pemesan" class="text-gray-300 text-sm">Nama Lengkap</label>
+                        {{ form.nama_pemesan }}
+                    </div>
+                    <div>
+                        <label for="id_nomor_tujuan" class="text-gray-300 text-sm">Nomor WhatsApp / HP</label>
+                        {{ form.nomor_tujuan }}
+                    </div>
+                </div>
+
+                <div>
+                    <label for="id_alamat" class="text-gray-300 text-sm">Alamat Tujuan / Keterangan</label>
+                    {{ form.alamat }}
+                </div>
+            </div>
+
+            <!-- STEP 2: JUMLAH & PEMBAYARAN -->
+            <div class="step space-y-4">
+                <h2 class="text-xl font-semibold text-yellow-400 border-l-4 border-yellow-400 pl-3">
+                    2. Jumlah & Pembayaran
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="id_jumlah" class="text-gray-300 text-sm">Jumlah Produk</label>
+                        {{ form.jumlah }}
+                    </div>
+                    <div>
+                        <label class="text-gray-300 text-sm block mb-2">Pilih Metode Pembayaran</label>
+                        <div>
+                            {{ form.metode_pembayaran }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: PESAN -->
+            <div class="step">
+                <button type="submit" class="w-full bg-yellow-400 text-black font-bold text-lg py-3 rounded-lg hover:bg-yellow-500 transition-colors duration-300">
+                    Pesan Sekarang
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 hidden">
+    <span onclick="closeModal()" class="absolute top-4 right-6 text-white text-3xl cursor-pointer">&times;</span>
+    <img id="modalImage" src="" class="max-h-[90vh] max-w-[90vw] rounded shadow-lg" alt="Preview">
+</div>
+
+<!-- Styling untuk form -->
+<style>
+    input[type="text"], input[type="number"], textarea {
+        width: 100%;
+        background-color: #1F2937; /* gray-800 */
+        border: 1px solid #4B5563;
+        color: white;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+    }
+    input:focus, textarea:focus {
+        outline: none;
+        border-color: #FBBF24; /* yellow-400 */
+        box-shadow: 0 0 0 2px #FBBF24;
+    }
+    select {
+        width: 100%;
+        background-color: #1F2937; /* bg-gray-800 */
+        border: 1px solid #4B5563;
+        color: white;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+    }
+    select:focus {
+        outline: none;
+        border-color: #FBBF24;
+        box-shadow: 0 0 0 2px #FBBF24;
+    }
+</style>
+
+<script>
+  function openModal(url) {
+    document.getElementById('modalImage').src = url;
+    document.getElementById('imageModal').classList.remove('hidden');
+  }
+
+  function closeModal() {
+    document.getElementById('imageModal').classList.add('hidden');
+  }
+
+  // Optional: Tutup modal jika klik luar gambar
+  window.addEventListener('click', function(e) {
+    const modal = document.getElementById('imageModal');
+    if (e.target === modal) {
+      closeModal();
+    }
+  });
+</script>
+{% endblock %}

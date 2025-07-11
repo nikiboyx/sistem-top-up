@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<div class="max-w-2xl mx-auto">
+    <form method="post" enctype="multipart/form-data" class="bg-gray-800 rounded-xl shadow-lg p-8 space-y-6">
+        {% csrf_token %}
+        
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-yellow-400 flex items-center">
+                {# Ikon akan berubah tergantung judul, contoh sederhana #}
+                {% if "Tambah" in title %}
+                    <i class="fas fa-plus-circle fa-fw mr-3"></i>
+                {% else %}
+                    <i class="fas fa-edit fa-fw mr-3"></i>
+                {% endif %}
+                {{ title }}
+            </h1>
+            <p class="text-sm text-gray-400 mt-1">Isi detail produk di bawah ini.</p>
+        </div>
+
+        <div>
+            <label for="{{ form.nama.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Nama Produk</label>
+            {{ form.nama }}
+        </div>
+
+        <div>
+            <label for="{{ form.harga.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Harga</label>
+            {{ form.harga }}
+        </div>
+
+        <div>
+            <label for="{{ form.deskripsi.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Deskripsi</label>
+            {{ form.deskripsi }}
+        </div>
+
+        <div>
+            <label for="{{ form.gambar.id_for_label }}" class="block text-sm font-medium text-gray-300 mb-2">Gambar Produk</label>
+            {{ form.gambar }}
+            {% if form.gambar.value %}
+                <p class="text-xs text-gray-400 mt-2">Saat ini: <a href="{{ form.gambar.value.url }}" class="text-blue-400 hover:underline">{{ form.gambar.value }}</a></p>
+            {% endif %}
+        </div>
+
+        <div class="flex items-center justify-end space-x-4 pt-4 border-t border-gray-700">
+            <a href="{% url 'admin_panel' %}" class="bg-gray-600/50 text-gray-300 hover:bg-gray-600 px-6 py-2 rounded-lg transition-colors text-sm font-semibold">
+                Batal
+            </a>
+            <button type="submit" class="bg-yellow-400 text-black font-bold px-6 py-2 rounded-lg hover:bg-yellow-500 transition-colors">
+                <i class="fas fa-save fa-fw mr-1"></i>Simpan
+            </button>
+        </div>
+    </form>
+</div>
+
+{# CSS untuk styling form Django agar sesuai tema Tailwind #}
+<style>
+    /* Styling dasar untuk input, textarea */
+    input[type="text"],
+    input[type="number"],
+    textarea {
+        width: 100%;
+        background-color: #1F2937; /* bg-gray-800 */
+        border: 1px solid #4B5563; /* border-gray-600 */
+        color: white;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #FBBF24; /* border-yellow-400 */
+        box-shadow: 0 0 0 2px #FBBF24;
+    }
+
+    /* Styling untuk input file */
+    input[type="file"] {
+        width: 100%;
+        background-color: #374151; /* bg-gray-700 */
+        border: 1px dashed #4B5563; /* border-gray-600 */
+        color: #D1D5DB; /* text-gray-300 */
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+    }
+    input[type="file"]::file-selector-button {
+        background-color: #4B5563; /* bg-gray-600 */
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        margin-right: 1rem;
+        transition: background-color 0.2s;
+    }
+    input[type="file"]::file-selector-button:hover {
+        background-color: #556173;
+    }
+</style>
+
+{% endblock %}

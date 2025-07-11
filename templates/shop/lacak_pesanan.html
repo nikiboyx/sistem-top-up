@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Lacak Pesanan{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto bg-gray-800 text-white p-6 rounded-lg shadow space-y-6 mt-6">
+
+    <h1 class="text-2xl font-bold text-yellow-400 text-center">📦 Lacak Pesanan Anda</h1>
+
+    <!-- FORM -->
+    <form method="get" class="space-y-4">
+        <label for="kode" class="block text-sm text-gray-300 font-medium">Masukkan Kode Pesanan</label>
+        <div class="flex gap-2">
+            <input type="text" name="kode" id="kode" value="{{ kode }}" required
+                   class="flex-1 px-4 py-2 rounded bg-gray-700 border border-gray-600 text-white focus:ring-2 focus:ring-yellow-400 focus:outline-none">
+            <button type="submit"
+                    class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-4 py-2 rounded transition">
+                Cari
+            </button>
+        </div>
+    </form>
+
+    <hr class="border-gray-600">
+
+    <!-- HASIL PENCARIAN -->
+    {% if pesanan %}
+        <div class="space-y-4">
+            <h2 class="text-xl font-semibold text-yellow-400">Detail Pesanan</h2>
+
+            <div class="space-y-1 text-sm">
+                <p><span class="text-gray-400">Kode Pesanan:</span> <strong>{{ pesanan.kode_unik }}</strong></p>
+                <p><span class="text-gray-400">Nama Pemesan:</span> {{ pesanan.nama_pemesan }}</p>
+                <p><span class="text-gray-400">Produk:</span> {{ pesanan.produk.nama }}</p>
+                <p><span class="text-gray-400">Jumlah:</span> {{ pesanan.jumlah }}</p>
+                <p><span class="text-gray-400">Nomor Tujuan:</span> {{ pesanan.nomor_tujuan }}</p>
+                <p><span class="text-gray-400">Metode Pembayaran:</span> {{ pesanan.get_metode_pembayaran_display }}</p>
+                <p><span class="text-gray-400">Tanggal Pesan:</span> {{ pesanan.tanggal|date:"d M Y, H:i" }}</p>
+                <p><span class="text-gray-400">Status:</span>
+                    {% if pesanan.status == "pending" %}
+                        <span class="text-yellow-400 font-semibold">Menunggu Pembayaran</span>
+                    {% elif pesanan.status == "diproses" %}
+                        <span class="text-blue-400 font-semibold">Diproses</span>
+                    {% elif pesanan.status == "selesai" %}
+                        <span class="text-green-400 font-semibold">Selesai</span>
+                    {% elif pesanan.status == "gagal" %}
+                        <span class="text-red-400 font-semibold">Gagal</span>
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="text-right">
+                <a href="{% url 'struk_pembayaran' pesanan.pk %}"
+                   class="text-sm text-yellow-400 hover:underline">🔎 Lihat Struk Pembayaran</a>
+            </div>
+        </div>
+    {% elif kode %}
+        <p class="text-red-400 text-sm font-medium">❌ Kode pesanan tidak ditemukan. Periksa kembali.</p>
+    {% endif %}
+
+    <div class="text-center pt-4">
+        <a href="{% url 'daftar_produk' %}" class="text-gray-400 hover:underline text-sm">⬅️ Kembali ke Beranda</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}Struk Pembayaran{% endblock %}
+
+{% block content %}
+<div class="bg-gray-800 text-white p-6 rounded-lg max-w-xl mx-auto shadow-lg space-y-6">
+
+    <h1 class="text-2xl font-bold text-yellow-400 flex items-center gap-2">
+        🧾 Struk Pembayaran
+    </h1>
+
+    <!-- Informasi Pesanan -->
+    <div class="space-y-2 text-sm">
+        <div class="flex justify-between">
+            <span class="text-gray-400">ID Pesanan:</span>
+            <span>{{ pesanan.kode_unik }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-400">Nama Pemesan:</span>
+            <span>{{ pesanan.nama_pemesan }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-400">Alamat:</span>
+            <span class="text-right">{{ pesanan.alamat }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-400">Produk:</span>
+            <span>{{ pesanan.produk.nama }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-400">Harga Satuan:</span>
+            <span>Rp{{ pesanan.produk.harga|floatformat:0 }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-400">Jumlah:</span>
+            <span>{{ pesanan.jumlah }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-400">Total Harga:</span>
+            <span>Rp{{ total_harga|floatformat:0 }}</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-gray-400">Status:</span>
+            <span>
+                {% if pesanan.status == "pending" %}
+                    <span class="text-yellow-400 font-semibold">Menunggu Pembayaran</span>
+                {% elif pesanan.status == "diproses" %}
+                    <span class="text-blue-400 font-semibold">Diproses</span>
+                {% elif pesanan.status == "selesai" %}
+                    <span class="text-green-400 font-semibold">Selesai</span>
+                {% elif pesanan.status == "gagal" %}
+                    <span class="text-red-400 font-semibold">Gagal</span>
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <!-- Nomor E-Wallet -->
+    <div class="bg-gray-700 p-4 rounded text-center mt-4">
+        <p class="text-sm text-gray-400 mb-1">Silakan transfer ke nomor berikut:</p>
+        <p class="text-lg font-bold text-yellow-400">
+            {% if pesanan.metode_pembayaran == 'dana' %}
+                DANA: 0812-XXXX-XXXX
+            {% elif pesanan.metode_pembayaran == 'ovo' %}
+                OVO: 0813-XXXX-XXXX
+            {% elif pesanan.metode_pembayaran == 'gopay' %}
+                GoPay: 0814-XXXX-XXXX
+            {% elif pesanan.metode_pembayaran == 'shopeepay' %}
+                ShopeePay: 0815-XXXX-XXXX
+            {% else %}
+                [Nomor tidak tersedia]
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- TOMBOL -->
+    <div class="flex justify-between mt-6 text-sm">
+        <a href="{% url 'lacak_pesanan' %}?kode={{ pesanan.kode_unik }}"
+           class="text-blue-400 hover:underline">🔍 Lacak Pesanan</a>
+        <a href="{% url 'daftar_produk' %}" class="text-gray-400 hover:underline">⬅️ Kembali ke Beranda</a>
+    </div>
+
+</div>
+{% endblock %}
