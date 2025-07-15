@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}404 - Halaman Tidak Ditemukan{% endblock %}
+
+{% block content %}
+<div class="text-center py-20">
+    <h1 class="text-5xl font-bold text-yellow-400">404</h1>
+    <p class="mt-4 text-gray-300 text-lg">Oops! Halaman yang kamu cari tidak ditemukan.</p>
+    <a href="{% url 'daftar_produk' %}" class="mt-6 inline-block bg-yellow-400 text-black px-6 py-3 rounded-full hover:bg-yellow-500 transition">
+        ⬅️ Kembali ke Beranda
+    </a>
+</div>
+{% endblock %}
